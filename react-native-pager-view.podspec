@@ -10,8 +10,8 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "10.0" }
-  s.source       = { :git => "https://github.com/callstack/react-native-pager-view.git", :tag => "#{s.version}" }
+  s.platforms    = { :ios => "10.0", :tvos => "10.0" }
+  s.source       = { :git => "https://github.com/pandarose/react-native-pager-view.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
