@@ -1,9 +1,9 @@
 # react-native-pager-view <img src="img/viewpager-logo.png" alt="ViewPager" width="24" height="24">
 
-[![CircleCI branch](https://img.shields.io/circleci/build/github/callstack/react-native-viewpager/master.svg)](https://circleci.com/gh/callstack/react-native-viewpager/tree/master)
-[![npm package](https://badge.fury.io/js/%40react-native-community%2Fviewpager.svg)](https://badge.fury.io/js/%40react-native-community%2Fviewpager)
+[![CircleCI branch](https://img.shields.io/circleci/build/github/callstack/react-native-pager-view/master.svg)](https://circleci.com/gh/callstack/react-native-pager-view/tree/master)
+[![npm package](https://badge.fury.io/js/react-native-pager-view.svg)](https://badge.fury.io/js/react-native-pager-view)
 [![Lean Core Extracted](https://img.shields.io/badge/Lean%20Core-Extracted-brightgreen.svg)](https://github.com/facebook/react-native/issues/23313)
-[![License](https://img.shields.io/github/license/react-native-community/react-native-viewpager?color=blue)](https://github.com/callstack/react-native-viewpager/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/callstack/react-native-pager-view?color=blue)](https://github.com/callstack/react-native-pager-view/blob/master/LICENSE)
 
 This component allows the user to swipe left and right through pages of data. Under the hood it is using the native [Android ViewPager](https://developer.android.com/reference/android/support/v4/view/ViewPager) and the [iOS UIPageViewController](https://developer.apple.com/documentation/uikit/uipageviewcontroller) implementations. [See it in action!](https://github.com/callstack/react-native-pager-view#preview)
 
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
 ```
 
 **Attention:** Note that you can only use `View` components as children of `PagerView` (cf. folder _/example_)
-. For Android if `View` has own children, set prop `collapsable` to false <https://reactnative.dev/img/view#collapsable>, otherwise react-native might remove those children views and and it's children will be rendered as separate pages
+. For Android if `View` has own children, set prop `collapsable` to false <https://reactnative.dev/docs/view#collapsable-android>, otherwise react-native might remove those children views and and it's children will be rendered as separate pages
 
 ## Advanced usage
 
@@ -153,6 +153,7 @@ For advanced usage please take a look into our [example project](https://github.
 | `overScrollMode: OverScollMode`                                      |                                                                              Used to override default value of overScroll mode. Can be `auto`, `always` or `never`. Defaults to `auto`                                                                              | Android  |
 | `offscreenPageLimit: number`                                         | Set the number of pages that should be retained to either side of the currently visible page(s). Pages beyond this limit will be recreated from the adapter when needed. Defaults to RecyclerView's caching strategy. The given value must either be larger than 0. | Android  |
 | `overdrag: boolean`                                                  |                                                                                       Allows for overscrolling after reaching the end or very beginning or pages. Defaults to `false`                                                                               |   iOS    |
+| `layoutDirection: ('ltr' / 'rtl' / 'locale')`                        |                                                                                       Specifies layout direction. Use `ltr` or `rtl` to set explicitly or `locale` to deduce from the default language script of a locale. Defaults to `locale`                     |   both    |
 
 | Method                                     |                                                                                                         Description                                                                                                          | Platform |
 | ------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------: |
@@ -192,6 +193,48 @@ requestAnimationFrame(() => refPagerView.current?.setPage(index));
 | :--------------------------------------------------------------------: | :-------------------------------------------------------------------------: |
 | <img src="img/ios-viewpager-vertical.gif" alt="ViewPager" width="325"> | <img src="img/ios-viewpager-vertical-curl.gif" alt="ViewPager" width="325"> |
 
+## Reanimated onPageScroll handler
+
+An example can be found [here](https://github.com/callstack/react-native-pager-view/blob/master/example/src/ReanimatedOnPageScrollExample.tsx)
+
+#### Instructions
+
+To attach reanimated handler with `onPageScroll` follow the below steps.
+
+```jsx
+// 1. Define the handler
+function usePageScrollHandler(handlers, dependencies) {
+  const {context, doDependenciesDiffer} = useHandler(handlers, dependencies);
+  const subscribeForEvents = ['onPageScroll'];
+
+  return useEvent(
+    event => {
+      'worklet';
+      const {onPageScroll} = handlers;
+      if (onPageScroll && event.eventName.endsWith('onPageScroll')) {
+        onPageScroll(event, context);
+      }
+    },
+    subscribeForEvents,
+    doDependenciesDiffer,
+  );
+}
+  
+// 2. Attach the event handler
+import { PagerView } from "react-native-pager-view";
+import Animated from "react-native-reanimated";
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
+
+const pageScrollHandler = usePageScrollHandler({
+    onPageScroll: e => {
+      'worklet';
+      offset.value = e.offset;
+      console.log(e.offset, e.position);
+    },
+});
+
+<AnimatedPagerView onPageScroll={pageScrollHandler}/>
+```
 ## License
 
 MIT

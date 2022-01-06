@@ -10,6 +10,14 @@ import { ScrollablePagerViewExample } from './ScrollablePagerViewExample';
 import { ScrollViewInsideExample } from './ScrollViewInsideExample';
 import HeadphonesCarouselExample from './HeadphonesCarouselExample';
 import PaginationDotsExample from './PaginationDotsExample';
+import { NestPagerView } from './NestPagerView';
+import ScrollableTabBarExample from './tabView/ScrollableTabBarExample';
+import AutoWidthTabBarExample from './tabView/AutoWidthTabBarExample';
+import TabBarIconExample from './tabView/TabBarIconExample';
+import CustomIndicatorExample from './tabView/CustomIndicatorExample';
+import CustomTabBarExample from './tabView/CustomTabBarExample';
+import CoverflowExample from './tabView/CoverflowExample';
+import ReanimatedOnPageScrollExample from './ReanimatedOnPageScrollExample';
 
 const examples = [
   { component: BasicPagerViewExample, name: 'Basic Example' },
@@ -26,9 +34,21 @@ const examples = [
     component: ScrollViewInsideExample,
     name: 'ScrollView inside PagerView Example',
   },
+  {
+    component: NestPagerView,
+    name: 'Nest PagerView Example',
+  },
+  { component: ScrollableTabBarExample, name: 'ScrollableTabBarExample' },
+  { component: AutoWidthTabBarExample, name: 'AutoWidthTabBarExample' },
+  { component: TabBarIconExample, name: 'TabBarIconExample' },
+  { component: CustomIndicatorExample, name: 'CustomIndicatorExample' },
+  { component: CustomTabBarExample, name: 'CustomTabBarExample' },
+  {
+    component: ReanimatedOnPageScrollExample,
+    name: 'Reanimated onPageScroll example',
+  },
+  { component: CoverflowExample, name: 'CoverflowExample' },
 ];
-
-// const examples = [{ component: BasicPagerViewExample, name: 'Basic Example' }];
 
 function App() {
   const navigation = useNavigation();
@@ -39,6 +59,7 @@ function App() {
           key={example.name}
           style={styles.exampleTouchable}
           onPress={() => {
+            //@ts-ignore
             navigation.navigate(example.name);
           }}
         >
